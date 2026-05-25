@@ -35,7 +35,7 @@ const mongoose = require('mongoose');
  * const connectDB = require('./config/db');
  * await connectDB();
  */
-const connectDB = async () => {
+const connectDB = async (retries = 3) => {
   try {
     // Disable strict query mode - allows queries to filter by fields
     // that are not defined in the schema. This prevents errors when
@@ -45,7 +45,10 @@ const connectDB = async () => {
     // Attempt to connect to MongoDB Atlas
     // The MONGODB_URI should be in the format:
     // mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000, // 10 second timeout
+      connectTimeoutMS: 10000,
+    });
 
     // Log successful connection with the host name
     // conn.connection.host gives us the cluster hostname
@@ -54,11 +57,18 @@ const connectDB = async () => {
 
   } catch (error) {
     // Log the error details for debugging
-    console.error('❌ MongoDB Connection Error:', error.message);
-    
-    // Exit the process with failure code (1)
-    // We exit because the app cannot function without a database connection
-    // In production, a process manager like PM2 will restart the app
+    console.error(`❌ MongoDB Connection Error (attempt ${4 - retries}/3):`, error.message);
+
+    if (retries > 1) {
+      console.log(`🔄 Retrying in 5 seconds... (${retries - 1} attempts left)`);
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      return connectDB(retries - 1);
+    }
+
+    // All retries exhausted — exit the process
+    // MongoDB Atlas must allow connections from this server's IP.
+    // Fix: Go to MongoDB Atlas → Network Access → Add 0.0.0.0/0
+    console.error('💀 All MongoDB connection attempts failed. Exiting...');
     process.exit(1);
   }
 };
