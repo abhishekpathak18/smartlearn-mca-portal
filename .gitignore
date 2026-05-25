@@ -1,0 +1,67 @@
+# ================================================
+# SmartLearn Portal - Root .gitignore
+# ================================================
+
+# Node modules - all levels
+node_modules/
+**/node_modules/
+
+# Environment files (NEVER commit these!)
+.env
+.env.local
+.env.production
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.env.local
+**/.env.production
+
+# Next.js
+client/.next/
+client/out/
+client/.vercel/
+client/.netlify/
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+**/*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Uploads (user-generated content)
+server/uploads/
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Package lock files (keep package-lock.json but not yarn.lock if you use npm)
+# yarn.lock
