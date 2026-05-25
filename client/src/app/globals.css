@@ -1,0 +1,426 @@
+/* =============================================================================
+   SmartLearn - AI Powered Learning & Placement Preparation Portal
+   Global Design System Stylesheet
+   =============================================================================
+   This file establishes the entire visual foundation for the portal:
+   - Google Fonts (Inter for body, Outfit for headings)
+   - Tailwind CSS directives
+   - CSS custom properties (design tokens) for consistent theming
+   - Glassmorphism card components
+   - Gradient text/background/border utilities
+   - Button variants (primary, secondary)
+   - Glow and animation effects
+   - Custom scrollbar and selection styling
+   - Keyframe animations (float, pulse-glow, shimmer, slide-up)
+   ============================================================================= */
+
+/* ---------- Google Fonts ---------- */
+/* Inter: Clean, modern sans-serif used for body text and UI elements
+   Outfit: Bold geometric sans-serif used for headings and display text */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap');
+
+/* ---------- Tailwind CSS Directives ---------- */
+/* These three directives inject Tailwind's base reset, component classes,
+   and utility classes into the stylesheet at build time */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   CSS Custom Properties (Design Tokens)
+   =============================================================================
+   Centralised color palette that can be referenced throughout the app.
+   Using CSS variables makes it trivial to swap themes or tweak branding
+   without hunting through dozens of files. */
+:root {
+  /* --- Primary gradient stops (indigo → violet) --- */
+  --primary-start: #6366f1;   /* indigo-500 */
+  --primary-mid: #8b5cf6;     /* violet-500 */
+  --primary-end: #a78bfa;     /* violet-400 */
+
+  /* --- Accent colours (cyan / teal) --- */
+  --accent-start: #06b6d4;    /* cyan-500 */
+  --accent-mid: #22d3ee;      /* cyan-400 */
+  --accent-end: #14b8a6;      /* teal-500 */
+
+  /* --- Dark-mode background tones --- */
+  --bg-dark-primary: #0f172a;   /* slate-900 */
+  --bg-dark-secondary: #1e293b; /* slate-800 */
+  --bg-dark-tertiary: #334155;  /* slate-700 */
+
+  /* --- Light-mode background tones --- */
+  --bg-light-primary: #f8fafc;  /* slate-50 */
+  --bg-light-secondary: #f1f5f9;/* slate-100 */
+
+  /* --- Glass effect values --- */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-bg-light: rgba(255, 255, 255, 0.7);
+  --glass-border-light: rgba(255, 255, 255, 0.2);
+
+  /* --- Glow / shadow --- */
+  --glow-color: rgba(139, 92, 246, 0.35);  /* purple glow */
+  --glow-color-strong: rgba(139, 92, 246, 0.5);
+}
+
+/* =============================================================================
+   @layer base – Global Resets & Defaults
+   =============================================================================
+   Sets the foundational styles: font family, smooth scrolling, default
+   dark-mode body colours, and a few quality-of-life resets. */
+@layer base {
+  /* Apply Inter as the default font across the entire app */
+  html {
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    scroll-behavior: smooth;           /* Enables smooth anchor scrolling */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Dark-mode defaults — the portal is dark-theme-first */
+  body {
+    background-color: var(--bg-dark-primary);
+    color: #f1f5f9; /* slate-100 */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* When the user switches to light mode (class toggled on <html>) */
+  .light body {
+    background-color: var(--bg-light-primary);
+    color: #0f172a; /* slate-900 */
+  }
+
+  /* Remove default focus outlines and replace with accessible ring */
+  *:focus-visible {
+    outline: 2px solid var(--primary-start);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Heading font — Outfit for punchy, modern headings */
+  h1, h2, h3, h4 {
+    font-family: 'Outfit', 'Inter', sans-serif;
+  }
+}
+
+/* =============================================================================
+   @layer components – Reusable Utility Classes
+   =============================================================================
+   These component classes encapsulate common visual patterns used across
+   the app (cards, buttons, effects). Using @layer components ensures they
+   sit between base and utilities in specificity. */
+@layer components {
+
+  /* -------------------------------------------------------------------------
+     .glass-card — Frosted-glass card for dark mode
+     Uses backdrop-blur + semi-transparent white bg + thin white border.
+     This is the signature "glassmorphism" look of the portal.
+     ----------------------------------------------------------------------- */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;              /* rounded-2xl equivalent */
+    transition: all 0.3s ease;
+  }
+
+  /* Subtle lift on hover to add interactivity */
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* -------------------------------------------------------------------------
+     .glass-card-light — Same frosted effect but for light mode
+     Increases opacity so the card is visible against a bright background.
+     ----------------------------------------------------------------------- */
+  .glass-card-light {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .glass-card-light:hover {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  /* -------------------------------------------------------------------------
+     .gradient-text — Eye-catching gradient-clipped text
+     Flows from indigo → purple → cyan for a techy, modern feel.
+     ----------------------------------------------------------------------- */
+  .gradient-text {
+    background: linear-gradient(
+      to right,
+      #6366f1,   /* indigo-500 */
+      #8b5cf6,   /* purple-500 */
+      #22d3ee    /* cyan-400 */
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* -------------------------------------------------------------------------
+     .gradient-bg — Full-page gradient background
+     Uses a subtle purple tint in the middle for depth.
+     ----------------------------------------------------------------------- */
+  .gradient-bg {
+    background: linear-gradient(
+      to bottom right,
+      #0f172a,               /* slate-900 */
+      rgba(88, 28, 135, 0.2),/* purple-900 at 20% opacity */
+      #0f172a                /* slate-900 */
+    );
+  }
+
+  /* -------------------------------------------------------------------------
+     .gradient-border — Simulated gradient border using a pseudo-element
+     CSS borders can't take gradients natively, so we layer a gradient
+     background behind the card and mask it with the inner background.
+     ----------------------------------------------------------------------- */
+  .gradient-border {
+    position: relative;
+    background: var(--bg-dark-secondary);
+    border-radius: 1rem;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    padding: 1px;                 /* The visible border "width" */
+    background: linear-gradient(
+      135deg,
+      #6366f1,   /* indigo-500 */
+      #8b5cf6,   /* purple-500 */
+      #22d3ee    /* cyan-400 */
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;          /* Don't block clicks on the card */
+  }
+
+  /* -------------------------------------------------------------------------
+     .btn-primary — Main call-to-action button
+     Indigo-to-purple gradient, scales up slightly on hover for feedback.
+     ----------------------------------------------------------------------- */
+  .btn-primary {
+    background: linear-gradient(to right, #4f46e5, #7c3aed);
+    color: white;
+    font-weight: 600;
+    padding: 0.625rem 1.5rem;      /* py-2.5 px-6 */
+    border-radius: 0.75rem;        /* rounded-xl */
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 24px rgba(99, 102, 241, 0.4);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  /* Shimmer sweep overlay on hover */
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.15) 45%,
+      rgba(255, 255, 255, 0.15) 55%,
+      transparent 60%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  .btn-primary:hover::after {
+    transform: translateX(100%);
+  }
+
+  /* -------------------------------------------------------------------------
+     .btn-secondary — Ghost / outline style button with glass effect
+     ----------------------------------------------------------------------- */
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;                /* slate-200 */
+    font-weight: 600;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: scale(1.03);
+  }
+
+  .btn-secondary:active {
+    transform: scale(0.98);
+  }
+
+  /* -------------------------------------------------------------------------
+     .glow — Purple outer glow (for cards, avatars, focus rings)
+     ----------------------------------------------------------------------- */
+  .glow {
+    box-shadow:
+      0 0 15px var(--glow-color),
+      0 0 45px rgba(139, 92, 246, 0.15);
+  }
+
+  /* -------------------------------------------------------------------------
+     .animate-float — Gentle up-and-down floating motion
+     Great for hero illustrations or decorative blobs.
+     ----------------------------------------------------------------------- */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* -------------------------------------------------------------------------
+     .animate-pulse-slow — Slow, subtle opacity pulse
+     Used for skeleton loaders and ambient "breathing" elements.
+     ----------------------------------------------------------------------- */
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+}
+
+/* =============================================================================
+   Custom Scrollbar Styling (Dark Theme)
+   =============================================================================
+   Thin, dark-themed scrollbars that match the portal aesthetic.
+   Only applies in WebKit browsers (Chrome, Edge, Safari). */
+
+/* WebKit scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;            /* slate-900 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #6366f1, #8b5cf6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #818cf8, #a78bfa);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 #0f172a;
+}
+
+/* =============================================================================
+   Selection Colour Styling
+   =============================================================================
+   Branded text selection using the primary gradient colours. */
+::selection {
+  background-color: rgba(99, 102, 241, 0.3);  /* indigo-500 at 30% */
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: rgba(99, 102, 241, 0.3);
+  color: #ffffff;
+}
+
+/* =============================================================================
+   Keyframe Animations
+   =============================================================================
+   Custom animations referenced by utility classes and Tailwind config. */
+
+/* float — Smooth vertical bob for decorative elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* pulse-glow — Slow glow intensity cycling */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px var(--glow-color);
+  }
+  50% {
+    box-shadow: 0 0 30px var(--glow-color-strong),
+                0 0 60px rgba(139, 92, 246, 0.2);
+  }
+}
+
+/* shimmer — Left-to-right shine sweep (for skeleton loading) */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* slide-up — Element slides up from below with fade-in */
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* pulse-slow — Gentle opacity breathing */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* fade-in — Simple opacity fade */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
