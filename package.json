@@ -1,10 +1,10 @@
 {
   "name": "smartlearn-mca-portal-root",
   "version": "1.0.0",
-  "description": "SmartLearn MCA Portal - Root package (points to server)",
+  "description": "SmartLearn MCA Portal",
   "scripts": {
-    "start": "node server/server.js",
-    "build": "echo 'No root build needed'"
+    "build": "cd server && npm install",
+    "start": "cd server && node server.js"
   },
   "engines": {
     "node": ">=18.0.0"
